@@ -330,9 +330,11 @@ public class GoogleDrive extends CordovaPlugin {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
+                Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
                 mCallbackContext.success(jsonObject);
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
+                 Log.i(TAG, " GDrive initialised With Error: ",ex );
                 mCallbackContext.error("Error: " + ex.getLocalizedMessage());
             }
         }
@@ -344,7 +346,7 @@ public class GoogleDrive extends CordovaPlugin {
             @Override
             public void onSuccess(GoogleSignInAccount googleSignInAccount) {
                 initializeDriveClient(googleSignInAccount, SUCCESS_NORMAL_SIGN_IN, true);
-
+                Log.i(TAG,  " initializeDriveClient " );
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
