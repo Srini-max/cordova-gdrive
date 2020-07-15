@@ -1,4 +1,4 @@
-package org.apache.cordova.GoogleDrive;
+package org.apache.cordova;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
