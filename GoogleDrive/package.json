@@ -1,0 +1,23 @@
+{
+  "name": "com.assaftayouri.plugin.googledrive",
+  "version": "0.0.1",
+  "description": "",
+  "cordova": {
+    "id": "com.assaftayouri.plugin.googledrive",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "",
+  "license": "ISC"
+}
