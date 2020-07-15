@@ -32,8 +32,9 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
         </config-file>
+		
 
-        <source-file src="src/android/com/assaftayouri/plugin/GoogleDrive.java" target-dir="src/android/com/assaftayouri/plugin" />
+        <source-file src="src/android/GoogleDrive.java" target-dir="src/org/apache/cordova/GoogleDrive" />
     </platform>
 
 
