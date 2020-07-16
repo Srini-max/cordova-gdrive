@@ -5,7 +5,9 @@ exports.print = function (arg0, success, error) {
 };
 
 exports.signIn = function (successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "GoogleDrive", "signIn");
+    return new Promise(function (resolve, reject) {
+      exec(successCallback, errorCallback, "GoogleDrive", "signIn")
+    })
 }
 
 exports.signOut = function (successCallback, errorCallback) {
