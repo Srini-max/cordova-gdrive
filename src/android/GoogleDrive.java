@@ -84,8 +84,8 @@ public class GoogleDrive extends CordovaPlugin {
     private final String EXIT_STREAM = "Exit From Stream";
     private final String FILE_CREATED = "File Created";
     private final String ERROR_FILE = "Unable to create File";
-    private final String INITIAL = "Assaf Google Drive Plugin Initiated";
-    private final String EXECUTING = "Assaf Google Drive Plugin Is Executing";
+    private final String INITIAL = "Google Drive Plugin Initiated";
+    private final String EXECUTING = "Google Drive Plugin Is Executing";
     private final String SIGN_OUT = "SignOut From User:";
     private final String SIGN_IN_ACTION = "signIn";
     private final String SILENT_SIGN_IN_ACTION = "silentSignIn";
@@ -95,7 +95,7 @@ public class GoogleDrive extends CordovaPlugin {
     private final String UPLOAD_FILE_WITH_FILE_PICKER_ACTION = "uploadFileWithPicker";
     private final String UPLOAD_FILE_ACTION = "uploadFile";
     private final String DOWNLOAD_FILES_ACTION ="downloadFiles";
-    private final String SIGN_IN_PROGRESS = "Assaf Google Drive Plugin Is Trying To Login";
+    private final String SIGN_IN_PROGRESS = "Google Drive Plugin Is Trying To Login";
     private final String DRIVE_ID_DIC_KEY = "driveId";
     private final String DESCRIPTION_DRIVE_DIC_KEY = "data";
 
