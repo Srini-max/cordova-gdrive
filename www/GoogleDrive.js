@@ -15,7 +15,9 @@ exports.signOut = function (successCallback, errorCallback) {
 }
 
 exports.pickFolder = function (successCallback, errorCallback) {
-    exec(successCallback, errorCallback, "GoogleDrive", "pickFolder");
+    return new Promise(function (resolve, reject) {
+      exec(successCallback, errorCallback, "GoogleDrive", "pickFolder")
+    })
 }
 
 exports.uploadFileWithPicker = function (folderId, title, description, successCallback, errorCallback) {
