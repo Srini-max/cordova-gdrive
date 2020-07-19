@@ -109,7 +109,7 @@ public class GoogleDrive extends CordovaPlugin {
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     DriveFile file;
 
-    private CallbackContext mCallbackContext;
+    private CallbackContext callback;
     private String mAction;
     private JSONArray mArgs;
 
@@ -124,7 +124,7 @@ public class GoogleDrive extends CordovaPlugin {
             throws JSONException {
         super.execute(action, args, callbackContext);
         Log.i(TAG, EXECUTING);
-        mCallbackContext = callbackContext;
+        this.callback = callbackContext;
         mAction = action;
         mArgs = args;
         // return true;//
@@ -141,7 +141,7 @@ public class GoogleDrive extends CordovaPlugin {
                     try {
                         signIn();
                     } catch (Exception ex) {
-                        mCallbackContext.error("Error: " + ex.getLocalizedMessage());
+                        this.callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -153,7 +153,7 @@ public class GoogleDrive extends CordovaPlugin {
                 Log.i(TAG, "Silent Sign In Success");
             } else {
                 Log.i(TAG, "Silent Sign In Failed");
-                mCallbackContext.error("Silent Sign In Failed");
+                 this.callback.error("Silent Sign In Failed");
             }
             return true;
         } else if (SIGN_OUT_ACTION.equals(mAction)) {
@@ -164,7 +164,7 @@ public class GoogleDrive extends CordovaPlugin {
                     try {
                         signOut();
                     } catch (Exception ex) {
-                        mCallbackContext.error("Error: " + ex.getLocalizedMessage());
+                         this.callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -179,7 +179,7 @@ public class GoogleDrive extends CordovaPlugin {
                         pickFolder();
                     } catch (Exception ex) {
                         Log.i(TAG, "exception");
-                        mCallbackContext.error("Error: " + ex.getLocalizedMessage());
+                         this.callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -198,7 +198,7 @@ public class GoogleDrive extends CordovaPlugin {
                         selectImage();
                     } catch (Exception e) {
                         Log.e(TAG, "Error: ", e);
-                        mCallbackContext.error("Error " + e.getLocalizedMessage());
+                         this.callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -223,11 +223,11 @@ public class GoogleDrive extends CordovaPlugin {
                         Log.i(TAG, driveFolderIdStr);
 
                         JSONArray filesId = uploadFiles(driveFolderIdStr, fileDetails, isAppFolder);
-                        mCallbackContext.success(filesId);
+                         this.callback.success(filesId);
 
                     } catch (Exception e) {
                         Log.e(TAG, "Error: ", e);
-                        mCallbackContext.error("Error " + e.getLocalizedMessage());
+                         this.callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -243,11 +243,11 @@ public class GoogleDrive extends CordovaPlugin {
                     Log.i(TAG, "executing: " + mAction);
                     try {
                         JSONArray elements = queryAllAppFiles();
-                        mCallbackContext.success(elements);
+                         this.callback.success(elements);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCallbackContext.error("Error " + e.getLocalizedMessage());
+                         this.callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -266,11 +266,11 @@ public class GoogleDrive extends CordovaPlugin {
                         Log.i(TAG, " before download: " + elements.toString());
                         downloadDriveFiles(elements);
                         Log.i(TAG, " after download: " + elements.toString());
-                        mCallbackContext.success(elements);
+                         this.callback.success(elements);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        mCallbackContext.error("Error " + e.getLocalizedMessage());
+                         this.callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -331,11 +331,11 @@ public class GoogleDrive extends CordovaPlugin {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
                 Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
-                mCallbackContext.success(jsonObject);
+                 this.callback.success(jsonObject);
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
                  Log.i(TAG, " GDrive initialised With Error: ",ex );
-                mCallbackContext.error("Error: " + ex.getLocalizedMessage());
+                 this.callback.error("Error: " + ex.getLocalizedMessage());
             }
         }
 
@@ -366,9 +366,9 @@ public class GoogleDrive extends CordovaPlugin {
 
             try {
                 jsonObject.put("email", accountEmail);
-                mCallbackContext.success(jsonObject);
+                 this.callback.success(jsonObject);
             } catch (JSONException e) {
-                mCallbackContext.error("Error: " + e.getLocalizedMessage());
+                 this.callback.error("Error: " + e.getLocalizedMessage());
             }
 
         }
@@ -660,7 +660,7 @@ public class GoogleDrive extends CordovaPlugin {
 
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("id", driveId.toString());
-                        mCallbackContext.success(jsonObject);
+                         this.callback.success(jsonObject);
 
                         mOpenItemTaskSource.setResult(driveId);
                     } else {
@@ -672,7 +672,7 @@ public class GoogleDrive extends CordovaPlugin {
         } catch (Exception ex)
 
         {
-            mCallbackContext.error("error " + ex.getLocalizedMessage());
+             this.callback.error("error " + ex.getLocalizedMessage());
         }
     }
 }
