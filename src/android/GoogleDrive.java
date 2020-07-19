@@ -124,7 +124,7 @@ public class GoogleDrive extends CordovaPlugin {
             throws JSONException {
         super.execute(action, args, callbackContext);
         Log.i(TAG, EXECUTING);
-        this.callback = callbackContext;
+        callback = callbackContext;
         mAction = action;
         mArgs = args;
         // return true;//
@@ -141,7 +141,7 @@ public class GoogleDrive extends CordovaPlugin {
                     try {
                         signIn();
                     } catch (Exception ex) {
-                        this.callback.error("Error: " + ex.getLocalizedMessage());
+                        callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -153,7 +153,7 @@ public class GoogleDrive extends CordovaPlugin {
                 Log.i(TAG, "Silent Sign In Success");
             } else {
                 Log.i(TAG, "Silent Sign In Failed");
-                 this.callback.error("Silent Sign In Failed");
+                 callback.error("Silent Sign In Failed");
             }
             return true;
         } else if (SIGN_OUT_ACTION.equals(mAction)) {
@@ -164,7 +164,7 @@ public class GoogleDrive extends CordovaPlugin {
                     try {
                         signOut();
                     } catch (Exception ex) {
-                         this.callback.error("Error: " + ex.getLocalizedMessage());
+                         callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -179,7 +179,7 @@ public class GoogleDrive extends CordovaPlugin {
                         pickFolder();
                     } catch (Exception ex) {
                         Log.i(TAG, "exception");
-                         this.callback.error("Error: " + ex.getLocalizedMessage());
+                         callback.error("Error: " + ex.getLocalizedMessage());
                     }
 
                 }
@@ -198,7 +198,7 @@ public class GoogleDrive extends CordovaPlugin {
                         selectImage();
                     } catch (Exception e) {
                         Log.e(TAG, "Error: ", e);
-                         this.callback.error("Error " + e.getLocalizedMessage());
+                         callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -223,11 +223,11 @@ public class GoogleDrive extends CordovaPlugin {
                         Log.i(TAG, driveFolderIdStr);
 
                         JSONArray filesId = uploadFiles(driveFolderIdStr, fileDetails, isAppFolder);
-                         this.callback.success(filesId);
+                         callback.success(filesId);
 
                     } catch (Exception e) {
                         Log.e(TAG, "Error: ", e);
-                         this.callback.error("Error " + e.getLocalizedMessage());
+                         callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -243,11 +243,11 @@ public class GoogleDrive extends CordovaPlugin {
                     Log.i(TAG, "executing: " + mAction);
                     try {
                         JSONArray elements = queryAllAppFiles();
-                         this.callback.success(elements);
+                         callback.success(elements);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                         this.callback.error("Error " + e.getLocalizedMessage());
+                         callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -266,11 +266,11 @@ public class GoogleDrive extends CordovaPlugin {
                         Log.i(TAG, " before download: " + elements.toString());
                         downloadDriveFiles(elements);
                         Log.i(TAG, " after download: " + elements.toString());
-                         this.callback.success(elements);
+                         callback.success(elements);
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                         this.callback.error("Error " + e.getLocalizedMessage());
+                         callback.error("Error " + e.getLocalizedMessage());
                     }
                 }
             });
@@ -331,11 +331,11 @@ public class GoogleDrive extends CordovaPlugin {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
                 Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
-                 this.callback.success(jsonObject);
+                 callback.success(jsonObject);
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
                  Log.i(TAG, " GDrive initialised With Error: ",ex );
-                 this.callback.error("Error: " + ex.getLocalizedMessage());
+                 callback.error("Error: " + ex.getLocalizedMessage());
             }
         }
 
@@ -366,9 +366,9 @@ public class GoogleDrive extends CordovaPlugin {
 
             try {
                 jsonObject.put("email", accountEmail);
-                 this.callback.success(jsonObject);
+                 callback.success(jsonObject);
             } catch (JSONException e) {
-                 this.callback.error("Error: " + e.getLocalizedMessage());
+                 callback.error("Error: " + e.getLocalizedMessage());
             }
 
         }
@@ -660,7 +660,7 @@ public class GoogleDrive extends CordovaPlugin {
 
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("id", driveId.toString());
-                         this.callback.success(jsonObject);
+                         callback.success(jsonObject);
 
                         mOpenItemTaskSource.setResult(driveId);
                     } else {
@@ -672,7 +672,7 @@ public class GoogleDrive extends CordovaPlugin {
         } catch (Exception ex)
 
         {
-             this.callback.error("error " + ex.getLocalizedMessage());
+             callback.error("error " + ex.getLocalizedMessage());
         }
     }
 }
