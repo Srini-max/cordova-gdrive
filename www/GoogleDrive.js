@@ -28,9 +28,10 @@ exports.uploadFile = function (drive, file_details,is_app_folder, successCallbac
     exec(successCallback, errorCallback, "GoogleDrive", "uploadFile", [drive,file_details,is_app_folder]);
 }
 
-exports.query = function (successCallback, errorCallback)
-{
-    exec(successCallback, errorCallback, "GoogleDrive", "query");
+exports.query = function (successCallback, errorCallback) {
+    return new Promise(function (resolve, reject) {
+      exec(successCallback, errorCallback, "GoogleDrive", "query")
+    })
 }
 
 exports.downloadFiles = function(downloadFiles,successCallback, errorCallback)
