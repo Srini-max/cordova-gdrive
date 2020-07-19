@@ -331,7 +331,6 @@ public class GoogleDrive extends CordovaPlugin {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
                 Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
-                queryAllAppFiles();
                 mCallbackContext.success(jsonObject);
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
