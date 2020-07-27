@@ -551,12 +551,12 @@ public class GoogleDrive extends CordovaPlugin {
 
     private JSONArray queryAllAppFiles() throws Exception {
         Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
-                Log.i(TAG, "Enetering  GDrive view list");
+                Log.i(TAG, "Enetering  GDrive view list"+query);
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
         MetadataBuffer metadataBuffer = Tasks.await(queryTask);
         JSONArray elements = new JSONArray();
         Log.i(TAG, "finish query metadatabuffer");
-
+ Log.i(TAG, "MetadataBuffer"+metadataBuffer);
         for (Metadata metadata : metadataBuffer) {
             if (! metadata.isFolder()) {
 
@@ -569,8 +569,8 @@ public class GoogleDrive extends CordovaPlugin {
                 object.put(DESCRIPTION_DRIVE_DIC_KEY, description);
                 elements.put(object);
 
-                Log.i(TAG, metadata.getDescription());
-                Log.i(TAG, driveFileIdStr);
+                Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
+                Log.i(TAG, "MetaGETFILEID"+driveFileIdStr);
 
             }
         }
