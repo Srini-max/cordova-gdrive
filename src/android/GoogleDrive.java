@@ -558,7 +558,7 @@ public class GoogleDrive extends CordovaPlugin {
         Log.i(TAG, "finish query metadatabuffer");
  Log.i(TAG, "MetadataBuffer"+metadataBuffer);
         for (Metadata metadata : metadataBuffer) {
-                            Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
+                            Log.i(TAG, "MetaGETDESC"+ metadata));
 
             if (! metadata.isFolder()) {
 
