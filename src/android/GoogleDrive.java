@@ -700,7 +700,10 @@ public class GoogleDrive extends CordovaPlugin {
                     googleSignInAccountTask(task);
                     break;
                 }
-
+		case REQUEST_CODE_RESOLUTION: {
+                                mGoogleApiClient.connect();
+                    break;
+                }
                 case CODE_UPLOAD_FILE: {
                     final String driveFolderIdStr = mArgs.getString(0);
                     //Task<DriveFolder> task =mDriveResourceClient.getRootFolder();
@@ -747,15 +750,6 @@ public class GoogleDrive extends CordovaPlugin {
 
         {
              callback.error("error " + ex.getLocalizedMessage());
-        }
-    }
-	 @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_RESOLUTION && resultCode == RESULT_OK) {
-            mGoogleApiClient.connect();
-        } else {
-            callback.error("error:- user cancelled authorization");
         }
     }
 
