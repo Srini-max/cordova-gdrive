@@ -580,11 +580,8 @@ public class GoogleDrive extends CordovaPlugin {
     }
 
     private JSONArray queryAllAppFiles() throws Exception {
-  SortOrder sortOrder = new SortOrder.Builder().addSortAscending(SortableField.TITLE).build();
 
-        Query query = new Query.Builder()
-                .addFilter(Filters.eq(SearchableField.TITLE, "test.txt"))
-                .build();
+        Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
         //Drive.DriveApi.fetchDriveId(mGoogleApiClient)
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
         queryTask
