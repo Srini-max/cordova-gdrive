@@ -751,35 +751,7 @@ public class GoogleDrive extends CordovaPlugin {
         }
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Called whenever the API client fails to connect.
-        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
-        if (!result.hasResolution()) {
-            // show the localized error dialog.
-            GoogleApiAvailability.getInstance().getErrorDialog(cordova.getActivity(), result.getErrorCode(), 0).show();
-            return;
-        }
-        try {
-            Log.i(TAG,"trying to resolve issue...");
-            cordova.setActivityResultCallback(this);//
-            result.startResolutionForResult(cordova.getActivity(), REQUEST_CODE_RESOLUTION);
-        } catch (IntentSender.SendIntentException e) {
-            Log.e(TAG, "Exception while starting resolution activity", e);
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        if (QUERY_FILES_ACTION.equals(mAction)) {
-              fileList(appFolder);
-        } 
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended");
-    }
+    
 }
 
 
