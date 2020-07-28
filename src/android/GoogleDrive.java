@@ -348,19 +348,19 @@ public class GoogleDrive extends CordovaPlugin {
     }		
     private void initializeDriveClient(GoogleSignInAccount signInAccount, String type, boolean toSendBack) {
         mDriveClient = Drive.getDriveClient(cordova.getActivity(), signInAccount);
-        mDriveResourceClient = Drive.getDriveResourceClient(cordova.getActivity(), signInAccount);
-	    
-                        JSONArray elements = listFiles();
-                         callback.success(elements);
-
-                   
+        mDriveResourceClient = Drive.getDriveResourceClient(cordova.getActivity(), signInAccount);                     
         Log.i(TAG, type + " With Email: " + signInAccount.getEmail());
         if (toSendBack) {
             try {
+		
+
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
                 Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
-                 callback.success(jsonObject);
+               //  callback.success(jsonObject);
+		JSONArray elements = listFiles();
+		Log.i(TAG, " GDrive elements:"+ elements);
+		callback.success(elements);     
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
                  Log.i(TAG, " GDrive initialised With Error: ",ex );
