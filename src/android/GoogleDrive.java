@@ -358,10 +358,10 @@ public class GoogleDrive extends CordovaPlugin {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("email", signInAccount.getEmail());
                 Log.i(TAG, " GDrive initialised With Email:"+ signInAccount.getEmail() );
-               //  callback.success(jsonObject);
-		JSONArray elements = listFiles();
-		Log.i(TAG, " GDrive elements:"+ elements);
-		callback.success(elements);     
+                callback.success(jsonObject);
+		//JSONArray elements = listFiles();
+		//Log.i(TAG, " GDrive elements:"+ elements);
+		//callback.success(elements);     
             } catch (Exception ex) {
                 Log.e(TAG, "Error: ", ex);
                  Log.i(TAG, " GDrive initialised With Error: ",ex );
@@ -580,27 +580,35 @@ public class GoogleDrive extends CordovaPlugin {
     }
 
     private JSONArray queryAllAppFiles() throws Exception {
-        Query query = new Query.Builder().addFilter(
-											Filters.and(
-											Filters.and(Filters.eq(SearchableField.TRASHED, false)),
-											Filters.or(
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.folder"),
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.photo"),
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.video"),
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.audio"),
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.file"),
-												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.unknown")
-												)
-											)
-										).build();
+  SortOrder sortOrder = new SortOrder.Builder().addSortAscending(SortableField.TITLE).build();
+
+        Query query = new Query.Builder()
+                .addFilter(Filters.eq(SearchableField.TITLE, "test.txt"))
+                .build();
+        //Drive.DriveApi.fetchDriveId(mGoogleApiClient)
+        Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
+        queryTask
+                .addOnSuccessListener(this,
+                        new OnSuccessListener<MetadataBuffer>() {
+                            @Override
+                            public void onSuccess(MetadataBuffer metadataBuffer) {
+                                Log.d("Count file" +metadataBuffer.getCount());
+                            }
+                        })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
        // Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
                 Log.i(TAG, "Enetering  GDrive view list"+query);
-        Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
-        MetadataBuffer metadataBuffer = Tasks.await(queryTask);
+     //   Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
+      //  MetadataBuffer metadataBuffer = Tasks.await(queryTask);
         JSONArray elements = new JSONArray();
         Log.i(TAG, "finish query metadatabuffer");
-        Log.i(TAG, "MetadataBuffer"+metadataBuffer);
-        for (Metadata metadata : metadataBuffer) {
+      //  Log.i(TAG, "MetadataBuffer"+metadataBuffer);
+      /*  for (Metadata metadata : metadataBuffer) {
             Log.i(TAG, "MetaGET"+ metadata);
             Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
             Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
@@ -617,7 +625,7 @@ public class GoogleDrive extends CordovaPlugin {
                 //object.put(DESCRIPTION_DRIVE_DIC_KEY, description);
                 elements.put(object);
             }
-        }
+        }*/
         return elements;
     }
 
