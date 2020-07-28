@@ -349,8 +349,8 @@ public class GoogleDrive extends CordovaPlugin {
         Drive.DriveApi.query(mGoogleApiClient, query)
                 .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
                     @Override
-			        Log.i(TAG, " DriveApi MetadataBufferResults" + DriveApi.MetadataBufferResult);
                     public void onResult(DriveApi.MetadataBufferResult result) {
+			Log.i(TAG, " DriveApi MetadataBufferResults" + result);
                         if (!result.getStatus().isSuccess()) {
                              callback.error("Error: failed to retrieve file list");
                             return;
