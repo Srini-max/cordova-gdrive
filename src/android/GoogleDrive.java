@@ -585,7 +585,7 @@ public class GoogleDrive extends CordovaPlugin {
         //Drive.DriveApi.fetchDriveId(mGoogleApiClient)
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
         
-       MetadataBuffer metadataBuffer = Tasks.await(queryTask).getMetadataBuffer();
+       MetadataBuffer metadataBuffer = Tasks.await(queryTask);
 				   try {
 				    for (Metadata metadata : metadataBuffer) {
 				      if (metadata == null) continue;
