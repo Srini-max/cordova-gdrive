@@ -260,6 +260,7 @@ public class GoogleDrive extends CordovaPlugin {
                         //appFolder = args.getBoolean(0);
                         if (mGoogleApiClient.isConnected()) {
                             fileList(false);
+			    Log.i(TAG, "Ending Query all files");
                         } else {
                             mGoogleApiClient.connect();
                         }
@@ -344,16 +345,18 @@ public class GoogleDrive extends CordovaPlugin {
         }
 
         Query query = qb.build();
-
+        Log.i(TAG, " Query Builder to get all drive files" + query);
         Drive.DriveApi.query(mGoogleApiClient, query)
                 .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
                     @Override
+			        Log.i(TAG, " DriveApi MetadataBufferResults" + DriveApi.MetadataBufferResult);
                     public void onResult(DriveApi.MetadataBufferResult result) {
                         if (!result.getStatus().isSuccess()) {
                              callback.error("Error: failed to retrieve file list");
                             return;
                         }
                         MetadataBuffer flist = result.getMetadataBuffer();
+			    Log.i(TAG, " DriveApi flists" + flist);
                         JSONArray response = new JSONArray();
                         for (Metadata file: flist) {
                             try {
@@ -365,6 +368,7 @@ public class GoogleDrive extends CordovaPlugin {
                             flistJSON.put("flist", response);
                         } catch (JSONException ex){}
                         callback.success("Final fetched list: " +flistJSON);
+			 Log.i(TAG, "Final fetched list: " +flistJSON);   
                         flist.release();
                     }
                 });
