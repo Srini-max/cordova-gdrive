@@ -129,7 +129,6 @@ public class GoogleDrive extends CordovaPlugin {
                     .addApi(Drive.API)
                     .addScope(Drive.SCOPE_FILE)
                     .addScope(Drive.SCOPE_APPFOLDER)
-                    .addOnConnectionFailedListener(this)
                     .build();
         }
         Log.i(TAG,"Plugin initialized. Cordova has activity: " + cordova.getActivity());
