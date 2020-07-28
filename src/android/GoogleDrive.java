@@ -568,10 +568,10 @@ Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
 
                 //DriveFile driveFile = .asDriveFile();
                 JSONObject object = new JSONObject();
-                String driveFilenameStr = metadata.getTitle().encodeToString();
+               //String driveFilenameStr = metadata.getTitle().encodeToString();
                 String driveFileIdStr = metadata.getDriveId().encodeToString();
                 Log.i(TAG, driveFileIdStr+" !!!!!!!!!!!!!!!!!!!!!driveFileIdStr encoded string");
-                                Log.i(TAG, driveFilenameStr+" !!!!!!!!!!!!!!!!!!!!!driveFilenameStr encoded string");
+                                //Log.i(TAG, driveFilenameStr+" !!!!!!!!!!!!!!!!!!!!!driveFilenameStr encoded string");
                 String description = metadata.getDescription();
                 object.put(DRIVE_ID_DIC_KEY, driveFileIdStr);
                 object.put(DESCRIPTION_DRIVE_DIC_KEY, description);
