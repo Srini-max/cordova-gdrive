@@ -572,7 +572,7 @@ public class GoogleDrive extends CordovaPlugin {
         Log.i(TAG, "MetadataBuffer"+metadataBuffer);
         for (Metadata metadata : metadataBuffer) {
             Log.i(TAG, "MetaGET"+ metadata);
-                            //Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
+            Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
             Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
             if ( metadata.isFolder()) {
 
@@ -581,9 +581,9 @@ public class GoogleDrive extends CordovaPlugin {
                //String driveFilenameStr = metadata.getTitle().encodeToString();
                 String driveFileIdStr = metadata.getDriveId().encodeToString();
                 Log.i(TAG, driveFileIdStr+" !!!!!!!!!!!!!!!!!!!!!driveFileIdStr encoded string");
-                                //Log.i(TAG, driveFilenameStr+" !!!!!!!!!!!!!!!!!!!!!driveFilenameStr encoded string");
                 String description = metadata.getDescription();
-                object.put(DRIVE_ID_DIC_KEY, driveFileIdStr);
+		Log.i(TAG, description+" !!!!!!!!!!!!!!!!!!!!!description encoded string");    
+		object.put(DRIVE_ID_DIC_KEY, driveFileIdStr);
                 object.put(DESCRIPTION_DRIVE_DIC_KEY, description);
                 elements.put(object);
             }
