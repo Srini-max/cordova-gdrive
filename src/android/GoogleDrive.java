@@ -263,7 +263,7 @@ public class GoogleDrive extends CordovaPlugin {
                         } else {
                             mGoogleApiClient.connect();
                         }
-                    }catch(JSONException ex){
+                    }catch(Exception ex){
                         callback.error("Error " + ex.getLocalizedMessage());
                     }
 
