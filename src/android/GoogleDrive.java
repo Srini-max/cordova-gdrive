@@ -325,28 +325,14 @@ public class GoogleDrive extends CordovaPlugin {
     private void initializeDriveClient(GoogleSignInAccount signInAccount, String type, boolean toSendBack) throws Exception {
         mDriveClient = Drive.getDriveClient(cordova.getActivity(), signInAccount);
         mDriveResourceClient = Drive.getDriveResourceClient(cordova.getActivity(), signInAccount);
-	Query query = new Query.Builder().build();
-        Log.i(TAG, "Enetering  GDrive view list"+query);
-        Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
-        MetadataBuffer metadataBuffer = Tasks.await(queryTask);
-        JSONArray elements = new JSONArray();
-        Log.i(TAG, "finish query metadatabuffer");
-        Log.i(TAG, "MetadataBuffer"+metadataBuffer);
-        for (Metadata metadata : metadataBuffer) {
-            Log.i(TAG, "MetaGET"+ metadata);
-            Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
-            Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
-            if ( metadata.isFolder()) {
-                JSONObject object = new JSONObject();
-                String driveFileIdStr = metadata.getDriveId().encodeToString();
-                Log.i(TAG, driveFileIdStr+" !!!!!!!!!!!!!!!!!!!!!driveFileIdStr encoded string");
-                String description = metadata.getDescription();
-		Log.i(TAG, description+" !!!!!!!!!!!!!!!!!!!!!description encoded string");    
-		object.put(DRIVE_ID_DIC_KEY, driveFileIdStr);
-                object.put(DESCRIPTION_DRIVE_DIC_KEY, description);
-                elements.put(object);
-            }
-        }
+	     try {
+                        JSONArray elements = queryAllAppFiles();
+                         callback.success(elements);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                         callback.error("Error " + e.getLocalizedMessage());
+                    }
         Log.i(TAG, type + " With Email: " + signInAccount.getEmail());
         if (toSendBack) {
             try {
