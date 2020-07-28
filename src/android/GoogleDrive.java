@@ -589,7 +589,6 @@ public class GoogleDrive extends CordovaPlugin {
                         new OnSuccessListener<MetadataBuffer>() {
                             @Override
                             public void onSuccess(MetadataBuffer metadataBuffer) {
-				     List<DriveFileInfo> files = new ArrayList<DriveFileInfo>();
 				  MetadataBuffer MDB = metadataBuffer.getMetadataBuffer();
 				 
 				  try {
@@ -598,7 +597,8 @@ public class GoogleDrive extends CordovaPlugin {
 				      String title = metadata.getTitle();
 				      if (!title.endsWith(".backup")) continue;
 					            Log.i(TAG, "title"+title);
-				      files.add(new DriveFileInfo(metadata.getDriveId(), title, metadata.getCreatedDate()));
+					      Log.i(TAG, "metadata.getDriveId()"+metadata.getDriveId());
+					     Log.i(TAG, "metadata.getCreatedDate()"+metadata.getCreatedDate()));
 				    }
 				  } finally {
 				    metadataBuffer.close();
