@@ -284,7 +284,7 @@ public class GoogleDrive extends CordovaPlugin {
     private boolean silentSignIn(boolean toSendBack) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(cordova.getActivity());
 
-   GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+   GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestApi(Drive.API)
                 .requestScopes(Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER).requestProfile().requestIdToken("496146475990-vugtthf7j59cb98n55nvfe61g00ovfut.apps.googleusercontent.com").build();
 
         if (account != null && account.getGrantedScopes().containsAll(this.appScopes)) {
