@@ -322,7 +322,7 @@ public class GoogleDrive extends CordovaPlugin {
         // }
     }
 
-    private void initializeDriveClient(GoogleSignInAccount signInAccount, String type, boolean toSendBack) throws Exception {
+    private void initializeDriveClient(GoogleSignInAccount signInAccount, String type, boolean toSendBack) {
         mDriveClient = Drive.getDriveClient(cordova.getActivity(), signInAccount);
         mDriveResourceClient = Drive.getDriveResourceClient(cordova.getActivity(), signInAccount);
 	     try {
