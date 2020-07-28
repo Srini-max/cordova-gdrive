@@ -598,7 +598,7 @@ public class GoogleDrive extends CordovaPlugin {
 				      if (!title.endsWith(".backup")) continue;
 					            Log.i(TAG, "title"+title);
 					      Log.i(TAG, "metadata.getDriveId()"+metadata.getDriveId());
-					     Log.i(TAG, "metadata.getCreatedDate()"+metadata.getCreatedDate()));
+					     Log.i(TAG, "metadata.getCreatedDate()"+metadata.getCreatedDate());
 				    }
 				  } finally {
 				    metadataBuffer.close();
