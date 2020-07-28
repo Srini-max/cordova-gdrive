@@ -550,7 +550,10 @@ public class GoogleDrive extends CordovaPlugin {
     }
 
     private JSONArray queryAllAppFiles() throws Exception {
-        Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
+        SortOrder sortOrder = new SortOrder.Builder().addSortAscending(SortableField.TITLE).build();
+Query query = new Query.Builder().setSortOrder(sortOrder).build();
+
+       // Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
                 Log.i(TAG, "Enetering  GDrive view list"+query);
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
         MetadataBuffer metadataBuffer = Tasks.await(queryTask);
