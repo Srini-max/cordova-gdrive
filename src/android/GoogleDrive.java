@@ -584,13 +584,11 @@ public class GoogleDrive extends CordovaPlugin {
         Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
         //Drive.DriveApi.fetchDriveId(mGoogleApiClient)
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
-        
+
        MetadataBuffer metadataBuffer = Tasks.await(queryTask);
 				   try {
 				    for (Metadata metadata : metadataBuffer) {
-				      if (metadata == null) continue;
 				      String title = metadata.getTitle();
-				      if (!title.endsWith(".backup")) continue;
 					       Log.i(TAG, "title"+title);
 					      Log.i(TAG, "metadata.getDriveId()"+metadata.getDriveId());
 					     Log.i(TAG, "metadata.getCreatedDate()"+metadata.getCreatedDate());
