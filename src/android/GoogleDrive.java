@@ -72,6 +72,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class GoogleDrive extends CordovaPlugin {
+	private static final int REQUEST_CODE_RESOLUTION = 3;
     private final int CODE_UPLOAD_FILE = 10;
     private final int CODE_AUTH = 11;
     private final int CODE_FOLDER_PICKER = 12;
@@ -108,7 +109,8 @@ public class GoogleDrive extends CordovaPlugin {
     private DriveResourceClient mDriveResourceClient;
     private TaskCompletionSource<DriveId> mOpenItemTaskSource;
     DriveFile file;
-
+    private boolean appFolder, listOfFiles;
+    private GoogleApiClient mGoogleApiClient;
     private CallbackContext callback;
     private String mAction;
     private JSONArray mArgs;
@@ -116,7 +118,17 @@ public class GoogleDrive extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        Log.i(TAG, INITIAL);
+        this.cordova = cordova;
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(cordova.getActivity())
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_FILE)
+                    .addScope(Drive.SCOPE_APPFOLDER)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+        }
+        Log.i(TAG,"Plugin initialized. Cordova has activity: " + cordova.getActivity());
     }
 
     @Override
@@ -237,21 +249,23 @@ public class GoogleDrive extends CordovaPlugin {
 
         else if (QUERY_FILES_ACTION.equals(mAction))
         {
-            cordova.getThreadPool().execute(new Runnable() {
+			cordova.getThreadPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i(TAG, "executing: " + mAction);
+					Log.i(TAG, "executing: " + mAction);
                     try {
-                        JSONArray elements = queryAllAppFiles();
-                         callback.success(elements);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                         callback.error("Error " + e.getLocalizedMessage());
+                        appFolder = args.getBoolean(0);
+                        if (mGoogleApiClient.isConnected()) {
+                            fileList(appFolder);
+                        } else {
+                            mGoogleApiClient.connect();
+                        }
+                    }catch(JSONException ex){
+                        callback.error("Error " + ex.getLocalizedMessage());
                     }
+
                 }
             });
-
             return true;
         }
 
@@ -284,7 +298,7 @@ public class GoogleDrive extends CordovaPlugin {
     private boolean silentSignIn(boolean toSendBack) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(cordova.getActivity());
 
-   GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestApi(Drive.API)
+   GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
                 .requestScopes(Drive.SCOPE_FILE, Drive.SCOPE_APPFOLDER).requestProfile().requestIdToken("496146475990-vugtthf7j59cb98n55nvfe61g00ovfut.apps.googleusercontent.com").build();
 
         if (account != null && account.getGrantedScopes().containsAll(this.appScopes)) {
@@ -305,7 +319,53 @@ public class GoogleDrive extends CordovaPlugin {
         }
         return false;
     }
+ private void fileList(final boolean appFolder) {
+        /* Allowed MIME types: https://developers.google.com/drive/v3/web/mime-types */
+        Query.Builder qb = new Query.Builder();
+        qb.addFilter(Filters.and(
+          Filters.and(Filters.eq(SearchableField.TRASHED, false)),
+          Filters.or(
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.folder"),
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.photo"),
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.video"),
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.audio"),
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.file"),
+            Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.unknown")
+            )
+          )
+        );
 
+        if(appFolder) {
+            DriveId appFolderId = Drive.DriveApi.getAppFolder(mGoogleApiClient).getDriveId();
+            qb.addFilter(Filters.in(SearchableField.PARENTS, appFolderId));
+        }
+
+        Query query = qb.build();
+
+        Drive.DriveApi.query(mGoogleApiClient, query)
+                .setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+                    @Override
+                    public void onResult(DriveApi.MetadataBufferResult result) {
+                        if (!result.getStatus().isSuccess()) {
+                            mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR,"failed to retrieve file list"));
+                            return;
+                        }
+                        MetadataBuffer flist = result.getMetadataBuffer();
+                        JSONArray response = new JSONArray();
+                        for (Metadata file: flist) {
+                            try {
+                                response.put(new JSONObject().put("name", file.getTitle()).put("modifiedTime", file.getCreatedDate().toString()).put("id", file.getDriveId()));
+                            }catch (JSONException ex){}
+                        }
+                        JSONObject flistJSON = new JSONObject();
+                        try{
+                            flistJSON.put("flist", response);
+                        } catch (JSONException ex){}
+                        mCallbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK,flistJSON));
+                        flist.release();
+                    }
+                });
+    }
     private void signIn() {
         Log.i(TAG, SIGN_IN_PROGRESS);
         //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(cordova.getActivity());
@@ -419,11 +479,9 @@ public class GoogleDrive extends CordovaPlugin {
         Log.i(TAG, "enter uploadFile");
             /*final Task<DriveContents> createContentsTask = mDriveResourceClient.createContents();
             final DriveFolder driveFolder;
-
             if (isAppFolder) {
                 Task<DriveFolder> folderTask = mDriveResourceClient.getAppFolder();
                 driveFolder = Tasks.await(folderTask);
-
             } else {
                 driveFolder = getDriveFolder(folderId);
             }*/
@@ -479,18 +537,14 @@ public class GoogleDrive extends CordovaPlugin {
                         InputStream inputStream = cordova.getActivity().getContentResolver().openInputStream(filePath);
                         Log.i(TAG, ENTER_STREAM);
                         byte[] data = new byte[BUFFER_SIZE];
-
                         while (inputStream.read(data) != - 1) {
                             outputStream.write(data);
                         }
-
                         inputStream.close();
                         outputStream.close();
                         Log.i(TAG, EXIT_STREAM);
-
                         MetadataChangeSet changeSet = new MetadataChangeSet.Builder().setTitle(fileName)
                                 .setMimeType(FILE_MIME).setDescription(description).build();
-
                         return mDriveResourceClient.createFile(parent, changeSet, contents);
                     } catch (Exception ex) {
                         Log.i(TAG, "Error:", ex);
@@ -690,12 +744,45 @@ public class GoogleDrive extends CordovaPlugin {
              callback.error("error " + ex.getLocalizedMessage());
         }
     }
+	 @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_RESOLUTION && resultCode == RESULT_OK) {
+            mGoogleApiClient.connect();
+        } else {
+            callback.error("error:- user cancelled authorization");
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // Called whenever the API client fails to connect.
+        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
+        if (!result.hasResolution()) {
+            // show the localized error dialog.
+            GoogleApiAvailability.getInstance().getErrorDialog(cordova.getActivity(), result.getErrorCode(), 0).show();
+            return;
+        }
+        try {
+            Log.i(TAG,"trying to resolve issue...");
+            cordova.setActivityResultCallback(this);//
+            result.startResolutionForResult(cordova.getActivity(), REQUEST_CODE_RESOLUTION);
+        } catch (IntentSender.SendIntentException e) {
+            Log.e(TAG, "Exception while starting resolution activity", e);
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        if (QUERY_FILES_ACTION.equals(mAction)) {
+              fileList(appFolder);
+        } 
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(TAG, "GoogleApiClient connection suspended");
+    }
 }
-
-
-
-
-
-
 
 
