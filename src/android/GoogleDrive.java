@@ -550,19 +550,30 @@ public class GoogleDrive extends CordovaPlugin {
     }
 
     private JSONArray queryAllAppFiles() throws Exception {
-Query query = new Query.Builder().build();
-
+        Query query = new Query.Builder().addFilter(
+											Filters.and(
+											Filters.and(Filters.eq(SearchableField.TRASHED, false)),
+											Filters.or(
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.folder"),
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.photo"),
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.video"),
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.audio"),
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.file"),
+												Filters.eq(SearchableField.MIME_TYPE, "application/vnd.google-apps.unknown")
+												)
+											)
+										).build();
        // Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
                 Log.i(TAG, "Enetering  GDrive view list"+query);
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
         MetadataBuffer metadataBuffer = Tasks.await(queryTask);
         JSONArray elements = new JSONArray();
         Log.i(TAG, "finish query metadatabuffer");
- Log.i(TAG, "MetadataBuffer"+metadataBuffer);
+        Log.i(TAG, "MetadataBuffer"+metadataBuffer);
         for (Metadata metadata : metadataBuffer) {
-                            Log.i(TAG, "MetaGET"+ metadata);
+            Log.i(TAG, "MetaGET"+ metadata);
                             //Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
-Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
+            Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
             if ( metadata.isFolder()) {
 
                 //DriveFile driveFile = .asDriveFile();
