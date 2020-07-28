@@ -584,13 +584,9 @@ public class GoogleDrive extends CordovaPlugin {
         Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
         //Drive.DriveApi.fetchDriveId(mGoogleApiClient)
         Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
-        queryTask
-                .addOnSuccessListener(this,
-                        new OnSuccessListener<MetadataBuffer>() {
-                            @Override
-                            public void onSuccess(MetadataBuffer metadataBuffer) {
-				 
-				  try {
+        
+       MetadataBuffer metadataBuffer = Tasks.await(queryTask).getMetadataBuffer();
+				   try {
 				    for (Metadata metadata : metadataBuffer) {
 				      if (metadata == null) continue;
 				      String title = metadata.getTitle();
@@ -602,15 +598,6 @@ public class GoogleDrive extends CordovaPlugin {
 				  } finally {
 				    metadataBuffer.close();
 				  }
-                               // Log.d("Count file" +metadataBuffer.getCount());
-                            }
-                        })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
        // Query query = new Query.Builder().addFilter(Filters.ownedByMe()).build();
                 Log.i(TAG, "Enetering  GDrive view list"+query);
      //   Task<MetadataBuffer> queryTask = mDriveResourceClient.query(query);
