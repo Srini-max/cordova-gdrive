@@ -262,7 +262,12 @@ public class GoogleDrive extends CordovaPlugin {
                             fileList(false);
 			    Log.i(TAG, "Ending Query all files");
                         } else {
+			     Log.i(TAG, "API Client not connected");
                             mGoogleApiClient.connect();
+				if (mGoogleApiClient.isConnected()) {
+                            fileList(false);
+			    Log.i(TAG, "Ending Query all files");
+				}
                         }
                     }catch(Exception ex){
                         callback.error("Error " + ex.getLocalizedMessage());
