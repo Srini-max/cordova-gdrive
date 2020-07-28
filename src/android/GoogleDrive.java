@@ -559,9 +559,9 @@ public class GoogleDrive extends CordovaPlugin {
  Log.i(TAG, "MetadataBuffer"+metadataBuffer);
         for (Metadata metadata : metadataBuffer) {
                             Log.i(TAG, "MetaGET"+ metadata);
-                            Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
+                            //Log.i(TAG, "MetaGETDESC"+ metadata.getDescription());
 Log.i(TAG, "MetaGETisFolder()"+ metadata.isFolder());
-            if (! metadata.isFolder()) {
+            if ( metadata.isFolder()) {
 
                 //DriveFile driveFile = .asDriveFile();
                 JSONObject object = new JSONObject();
