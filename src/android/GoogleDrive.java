@@ -259,7 +259,7 @@ public class GoogleDrive extends CordovaPlugin {
                     try {
                         //appFolder = args.getBoolean(0);
                         if (mGoogleApiClient.isConnected()) {
-                            fileList();
+                            fileList(false);
                         } else {
                             mGoogleApiClient.connect();
                         }
